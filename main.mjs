@@ -55,3 +55,13 @@ test.set('app', 'colorful')
 test.set('app', 'football')
 test.show()
 console.log(test.length())
+console.log(test.get('alberto'))
+console.log(test.has('vanilla'))
+console.log(test.remove('vanilla'))
+test.show()
+
+console.log(test.keys())
+console.log(test.values())
+console.log(test.entries())
+
+// node main.mjs

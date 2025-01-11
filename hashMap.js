@@ -17,12 +17,6 @@ class HashMap {
         return hashCode % this.capacity;
             }
 
-    checkSize(index){
-        if (index < 0 || index >= this.array.length) {
-            throw new Error("Trying to access index out of bounds");
-        }
-    }
-
     set(key, value){
         this._checkCapacity()  
 
@@ -38,6 +32,7 @@ class HashMap {
             }
         }
         bucket.push([key, value]);
+
         this.count++;  
     }
 
@@ -53,8 +48,39 @@ class HashMap {
     }
 
     length(){
-        console.log(this.array.length)
         return this.count
+    }
+
+    get(key){
+        const index = this._hash(key)
+        const bucket = this.array[index];
+        if (bucket) {
+            for (let [k, v] of bucket) {
+                if (k === key) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+
+    has(key){
+        return this.get(key) !== null ? true : false
+    }
+
+    remove(key){
+        const index = this._hash(key)
+        const bucket = this.array[index];
+        if (bucket) {
+            for (let i = 0; i<bucket.length; i++) {
+                if (bucket[i][0] === key) {
+                    bucket.splice(i,1)
+                    this.count --
+                    return true
+                }
+            }
+        }
+        return false;
     }
 
     _grow(){
@@ -72,7 +98,7 @@ class HashMap {
     }
 
     _checkCapacity(){
-        if (this.count  > this.loadFactor * this.capacitys){
+        if (this.count  > this.loadFactor * this.capacity){
             this._grow()
         }
 
@@ -81,6 +107,43 @@ class HashMap {
     clear(){
         this.array.fill(null)
     }
-    } 
+
+    keys(){
+    const keysArray = []
+    for (const bucket of this.array) {
+        if (bucket) {
+            for (const [key] of bucket) {
+                keysArray.push(key)
+            }
+        }
+        }
+    return keysArray
+    }
+
+    values(){
+        const valuesArray = []
+        for (const bucket of this.array) {
+            if (bucket) {
+                for (const [, value] of bucket) {
+                    valuesArray.push(value)
+                }
+            }
+        }
+        return valuesArray
+    }
+
+    entries(){
+        const entriesArray = []
+        for (const bucket of this.array) {
+            if (bucket) {
+                for (const [key, value] of bucket) {
+                    entriesArray.push([key, value])
+                }
+            }
+        }
+        return entriesArray
+    }
+    
+} 
 
 module.exports = { HashMap };
